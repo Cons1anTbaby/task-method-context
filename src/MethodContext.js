@@ -1,3 +1,5 @@
+import { count, timeStamp } from 'console';
+import { addSyntheticLeadingComment } from 'typescript';
 import { EventEmitter } from './EventEmitter';
 
 /*
@@ -8,8 +10,15 @@ import { EventEmitter } from './EventEmitter';
  */
 export const obj = {
     count: 0,
-    subscribe() {},
-    unsubscribe() {},
+    addCount() {
+        return (obj.count += 1);
+    },
+    subscribe() {
+        EventEmitter.on('click', this.addCount);
+    },
+    unsubscribe() {
+        EventEmitter.off('click', this.addCount);
+    },
 };
 
 /*
@@ -19,7 +28,10 @@ obj1.first(1, 2, 3);
 // Внутренний вызов должен быть равносилен obj1.second(3, 2, 1)
  */
 export const obj1 = {
-    first(...args) {},
+    first(...args) {
+        let listArgs = args;
+        this.second(...listArgs.reverse());
+    },
     second() {
         // здесь ничего писать не нужно
     },
